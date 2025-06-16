@@ -13,32 +13,31 @@ To use the Data Encryption Standard (DES) algorithm for a practical application,
 
 ## Program:
 ```
-def encrypt(message, key):
-    encrypted = []
-    key_length = len(key)
-    for i in range(len(message)):
-        encrypted_char = ord(message[i]) ^ ord(key[i % key_length])
-        encrypted.append(encrypted_char)
-    return encrypted
+#include <stdio.h>
+#include <string.h>
+void xorCrypt(char *in, char *key, char *out, int len)
+{
+  for (int i = 0; i < len; i++) out[i] = in[i] ^ key[i % strlen(key)];
+  out[len] = 0;
+}
+int main() 
+{
+  char msg[100], key[100], enc[100], dec[100];
+  printf("Enter message: "); fgets(msg, 100, stdin);
+  msg[strcspn(msg, "\n")] = 0;
+  printf("Enter key: "); fgets(key, 100, stdin);
+  key[strcspn(key, "\n")] = 0;
 
-def decrypt(encrypted, key):
-    decrypted = []
-    key_length = len(key)
-    for i in range(len(encrypted)):
-        decrypted_char = encrypted[i] ^ ord(key[i % key_length])
-        decrypted.append(chr(decrypted_char))
-    return ''.join(decrypted)
+  int len = strlen(msg);
+  xorCrypt(msg, key, enc, len);
+  printf("Encrypted: ");
+  for (int i = 0; i < len; i++) printf("%02X ", (unsigned char)enc[i]);
+  printf("\n");
 
-message = input("Enter the message to encrypt: ")
-key = input("Enter the encryption key: ")
-
-encrypted_message = encrypt(message, key)
-
-print("Original Message:", message)
-print("Encrypted Message (hex):", ' '.join(f"{byte:02X}" for byte in encrypted_message))
-
-decrypted_message = decrypt(encrypted_message, key)
-print("Decrypted Message:", decrypted_message)
+  xorCrypt(enc, key, dec, len);
+  printf("Decrypted: %s\n", dec);
+  return 0;
+}
 
 ```
 
